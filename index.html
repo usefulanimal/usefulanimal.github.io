@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>股海明燈</title>
+    <style>
+        /* Reset some default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif; /* Use a good Traditional Chinese font */
+            line-height: 1.6;
+            margin: 0; /* Remove body margin */
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        h1, h2, h3 {
+            color: #2c3e50; /* Darker blue for headings */
+        }
+
+        h1 {
+            font-size: 3rem;
+            text-align: center;
+            padding: 2rem 0;
+            background-color: #3498db;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            cursor: pointer; /* Indicate clickable for collapsible sections */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        /* + - icon*/
+        h2::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: #3498db;
+            transition: transform 0.3s;
+        }
+
+        h2.active::after {
+            content: '-';
+            transform: rotate(180deg);
+        }
+
+
+        h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            color: #34495e;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+            padding: 0 1rem; /* Add some padding */
+            max-width: 800px; /* Limit content width */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .section-content{
+             margin-bottom: 1rem;
+        }
+
+        .quiz-question {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .quiz-options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .quiz-options li {
+            margin-bottom: 0.3rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        .quiz-options li:hover {
+            background-color: #ecf0f1;
+            transform: scale(1.02); /* Slightly enlarge on hover */
+        }
+        .correct {
+            background-color: #d4edda; /* Light green for correct */
+            border-color: #c3e6cb;
+        }
+
+        .incorrect {
+            background-color: #f8d7da; /* Light red for incorrect */
+            border-color: #f5c6cb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .important {
+            font-weight: bold;
+            color: #c0392b; /* Dark red for emphasis */
+        }
+        ul li{
+            margin-bottom: .5rem;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: #2c3e50;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav ul {
+            list-style: none;
+            display: inline-block; /* Center the navigation */
+        }
+
+        nav li {
+            display: inline;
+            margin: 0 1rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #34495e;
+        }
+
+        /* Tooltip Styles */
+        .tooltip {
+            position: relative; /* Make the tooltip relative to its container */
+            display: inline-block; /* Only take up as much width as needed */
+            cursor: pointer;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden; /* Hide by default */
+            width: 120px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Position above the text */
+            left: 50%;
+            margin-left: -60px; /* Center horizontally */
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        /* Arrow for the tooltip */
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%; /* At the bottom of the tooltip */
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent; /* Create the arrow */
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+         /* Image container */
+        .image-container {
+            text-align: center; /* Center the image */
+            margin-bottom: 1rem;
+        }
+
+        .image-container img {
+            max-width: 100%; /* Make sure the image doesn't overflow its container */
+            height: auto;
+            border: 1px solid #ddd; /* Add a subtle border */
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+        }
+
+    </style>
+    <!-- Include Google Fonts (for Noto Sans TC) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>股海明燈</h1>
+    <p style="text-align: center;">學習技術分析、交易心理學和風險管理，掌握交易的藝術。</p>
+
+    <!-- Table of Contents (using anchor links) -->
+    <nav>
+        <ul>
+            <li><a href="#mindset">心態篇</a></li>
+            <li><a href="#technical-analysis">技術分析篇</a></li>
+            <li><a href="#strategies">操作策略篇</a></li>
+            <li><a href="#journal">交易紀錄與反思</a></li>
+        </ul>
+    </nav>
+
+    <!-- Mindset Section -->
+    <section id="mindset" class="section">
+        <h2 data-section="mindset-content">心態篇 (Mindset)</h2>
+        <div id="mindset-content" class="section-content">
+            <p>交易心理學是成功的關鍵。本節將探討如何克服恐懼與貪婪、管理情緒成本、建立防護網，並避免常見的認知偏誤。</p>
+
+            <h3>克服恐懼與貪婪 (Overcoming Fear and Greed)</h3>
+            <p>恐懼和貪婪是交易者最大的敵人。學習如何識別並控制這些情緒，對於做出理性決策至關重要。</p>
+            <ul>
+                <li><span class="important">不要恐慌：</span> 即使市場下跌，也要保持冷靜，不要做出衝動的決定。</li>
+                <li><span class="important">不要貪婪：</span> 設定合理的獲利目標，不要過度追求高報酬。</li>
+                <li><span class="important">認識自己:</span> 了解自己的風險承受能力和交易風格。</li>
+            </ul>
+
+            <!-- Quiz 1 (Mindset) -->
+            <div class="quiz">
+                <div class="quiz-question">
+                    什麼是「情緒成本」？
+                </div>
+                <ul class="quiz-options">
+                    <li data-answer="a">A. 交易手續費</li>
+                    <li data-answer="b">B. 因情緒影響而做出的非理性決策</li>
+                    <li data-answer="c">C. 股票的價格</li>
+                </ul>
+                <div class="quiz-feedback hidden"></div>
+            </div>
+            <h3>防護網與修正 (Safety Net and Correction)</h3>
+            <p>在交易中，「及時修正」就像防護網一樣，保護了預測者的尊嚴。頻繁的小修正比一次大的修正更有效。</p>
+            <ul>
+            <li><span class="important">及時修正：</span> 不要害怕承認錯誤，及時調整你的策略。</li>
+                <li><span class="important">小步快跑：</span> 頻繁地進行小幅度的修正，而不是一次性的大幅調整。</li>
+                <li><span class="important">預測是參考：</span> 預測並非絕對準確，要根據市場變化不斷修正。</li>
+            </ul>
+            <!-- Quiz 2 -->
+            <div class="quiz">
+                <div class="quiz-question">
+                    「防護網」是指什麼？
+                </div>
+                <ul class="quiz-options">
+                    <li data-answer="a">A. 停損單</li>
+                    <li data-answer="b">B. 定期檢視與修正</li>
+                    <li data-answer="c">C. 保險</li>
+                </ul>
+                <div class="quiz-feedback hidden"></div>
+            </div>
+
+            <h3>避免盲區 (Avoiding Blind Spots)</h3>
+            <p>交易者常有盲區，例如「後見之明」偏誤，認為過去的事件更容易預測。</p>
+            <ul>
+                <li><span class="important">後見之明偏誤 (Hindsight Bias):</span>  避免認為自己「早就知道」會發生什麼。</li>
+                <li><span class="important">過度自信 (Overconfidence):</span>  不要高估自己的預測能力。</li>
+                <li><span class="important">確認偏誤 (Confirmation Bias):</span>  不要只尋找支持自己觀點的資訊。</li>
+            </ul>
+
+            <h3>專注過程 (Focus on the Process)</h3>
+            <p>不要過度關注交易的結果，而要專注於交易的過程。好的交易過程即使短期虧損，長期來看也能帶來盈利。</p>
+            <ul>
+                <li><span class="important">紀律 (Discipline):</span>  嚴格遵守你的交易計劃。</li>
+                <li><span class="important">耐心 (Patience):</span>  不要急於求成，等待好的交易機會。</li>
+                <li><span class="important">學習 (Learning):</span>  不斷學習和改進你的交易技巧。</span>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Technical Analysis Section -->
+    <section id="technical-analysis" class="section">
+        <h2 data-section="technical-analysis-content">技術分析篇 (Technical Analysis)</h2>
+        <div id="technical-analysis-content" class="section-content">
+            <p>技術分析是通過研究過去的市場數據（主要是價格和成交量）來預測未來價格走勢的方法。</p>
+
+            <h3>汰弱留強 (Eliminate the Weak, Keep the Strong)</h3>
+            <p>選擇表現強勢的股票，避免表現弱勢的股票。</p>
+            <ul>
+            <li><span class="important">強勢股:</span> 股價持續上漲，成交量放大。</li>
+            <li><span class="important">弱勢股:</span> 股價持續下跌，成交量萎縮。</li>
+            <li><span class="important">主動停損:</span> 當股票表現弱勢時，及時止損。</li>
+            </ul>
+
+            <h3>趨勢 (Trends)</h3>
+            <p>識別趨勢是技術分析的核心。</p>
+              <!-- Image Example (Trendlines) -->
+            <div class="image-container">
+                <img src="https://i.imgur.com/uL0rIaK.png" alt="趨勢線範例">
+            </div>
+            <ul>
+            <li><span class="important">上升趨勢 (Uptrend):</span> 一底比一底高，一頭比一頭高。</li>
+            <li><span class="important">下降趨勢 (Downtrend):</span> 一底比一底低，一頭比一頭低。</li>
+            <li><span class="important">盤整趨勢 (Sideways Trend):</span> 股價在一定範圍內波動。</li>
+            <li>
+                <span class="important tooltip">趨勢線
+                    <span class="tooltiptext">用直線連接股價的低點或高點，判斷趨勢方向。</span>
+                </span>
+             </li>
+            </ul>
+            <!-- Quiz 3 -->
+            <div class="quiz">
+                <div class="quiz-question">
+                    下列何者是上升趨勢的特徵？
+                </div>
+                <ul class="quiz-options">
+                    <li data-answer="a">A. 一底比一底低，一頭比一頭低</li>
+                    <li data-answer="b">B. 一底比一底高，一頭比一頭高</li>
+                    <li data-answer="c">C. 股價在一定範圍內波動</li>
+                </ul>
+                <div class="quiz-feedback hidden"></div>
+            </div>
+
+            <h3>主力動向 (Main Force Movement)</h3>
+            <p>跟蹤主力資金的動向，可以提高交易的勝率。</p>
+            <ul>
+                <li><span class="important">大量成交：</span> 主力資金進場或出場的信號。</li>
+                <li><span class="important">價漲量增：</span> 主力資金進場，股價可能繼續上漲。</li>
+                <li><span class="important">價跌量縮：</span> 主力資金出場，股價可能繼續下跌。</li>
+            </ul>
+
+            <h3>K線 (Candlestick Charts)</h3>
+               <!-- Image Example (Candlesticks) -->
+            <div class="image-container">
+                <img src="https://i.imgur.com/R5Z5iG1.png" alt="K線圖範例">
+            </div>
+            <p>K線圖可以直觀地反映股價的漲跌變化。</p>
+            <ul>
+                <li><span class="important tooltip">陽線 (Bullish Candle)<span class="tooltiptext">收盤價高於開盤價 (通常為紅色或綠色)</span></span></li>
+                <li><span class="important tooltip">陰線 (Bearish Candle)<span class="tooltiptext">收盤價低於開盤價 (通常為黑色或紅色)。</span></span></li>
+                <li><span class="important">長紅/長黑:</span>  表示強烈的上漲/下跌趨勢。</li>
+                <li><span class="important tooltip">十字星 (Doji) <span class="tooltiptext">開盤價和收盤價非常接近，表示市場猶豫不決。</span></span>
+                </li>
+            </ul>
+
+            <h3>型態 (Patterns)</h3>
+            <ul>
+                <li><span class="important">頭肩頂/底 (Head and Shoulders Top/Bottom):</span>  反轉形態。</li>
+                <li><span class="important">雙重頂/底 (Double Top/Bottom):</span>  反轉形態。</li>
+                <li><span class="important">三角形 (Triangles):</span>  持續形態或反轉形態。</span>
+            </ul>
+            <h3>量價關係 (Volume and Price Relationship)</h3>
+            <ul>
+                <li><span class="important">價漲量增:</span> 看漲訊號。</li>
+                <li><span class="important">價漲量縮:</span> 可能是假突破。</li>
+                <li><span class="important">價跌量增:</span> 看跌訊號。</li>
+                <li><span class="important">價跌量縮:</span> 可能是洗盤。</li>
+            </ul>
+            <h3>停損/停利 (Stop Loss / Take Profit)</h3>
+            <ul>
+            <li><span class="important">停損:</span> 預先設定的出場點，以限制損失。</li>
+            <li><span class="important">停利:</span> 預先設定的出場點，以鎖定獲利。</li>
+            </ul>
+            <h3>支撐與阻力 (Support and Resistance)</h3>
+            <ul>
+                <li><span class="important">支撐位:</span> 股價下跌時，可能獲得支撐的價位。</li>
+                <li><span class="important">阻力位:</span> 股價上漲時，可能遇到阻力的價位。</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Strategies Section -->
+    <section id="strategies" class="section">
+        <h2 data-section="strategies-content">操作策略篇 (Trading Strategies)</h2>
+         <div id="strategies-content" class="section-content">
+            <p>本節介紹一些實際的交易策略，包括進場/出場策略、資金管理和分散投資。</p>
+
+            <h3>進場/出場策略 (Entry/Exit Strategies)</h3>
+            <ul>
+                <li><span class="important">突破買入:</span> 當股價突破阻力位時買入。</li>
+                <li><span class="important">跌破賣出:</span> 當股價跌破支撐位時賣出。</li>
+                <li><span class="important">回測買入:</span> 當股價回測支撐位時買入。</li>
+                <li><span class="important">反彈賣出:</span> 當股價反彈至阻力位時賣出。</li>
+            </ul>
+
+            <h3>資金管理 (Money Management)</h3>
+            <p>資金管理是交易中最重要的方面之一。永遠不要投入超過你能承受損失的資金。</p>
+            <ul>
+                <li><span class="important">每次交易風險:</span>  不要超過總資金的1%-2%。</li>
+                <li><span class="important">總體風險:</span>  控制總體風險敞口。</li>
+                <li><span class="important">不要過度交易:</span>  避免頻繁交易。</li>
+            </ul>
+
+            <h3>分散投資 (Diversification)</h3>
+            <ul>
+                <li><span class="important">不要把所有雞蛋放在同一個籃子裡。</span></li>
+                <li><span class="important">分散投資於不同的股票、行業和資產類別。</span></li>
+            </ul>
+
+            <h3>批次買賣 (Batch Trading)</h3>
+            <ul>
+                <li><span class="important">逐步建立倉位:</span>  不要一次性買入所有股票。</li>
+                <li><span class="important">逐步減倉:</span>  不要一次性賣出所有股票。</li>
+            </ul>
+
+            <h3>交易紀錄 (Trading Journal)</h3>
+            <ul>
+                <li><span class="important">詳細記錄每一筆交易。</span></li>
+                <li><span class="important">分析交易結果，找出優點和缺點。</span></li>
+                <li><span class="important">從錯誤中學習，不斷改進。</span></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Journal Section -->
+    <section id="journal" class="section">
+        <h2 data-section="journal-content">交易紀錄與反思 (Trading Journal & Reflection)</h2>
+        <div id="journal-content" class="section-content">
+            <p>記錄你的交易對於學習和改進至關重要。記錄你的交易決策、原因、結果和情緒。</p>
+
+            <h3>交易日誌模板</h3>
+            <p>你可以使用以下模板來記錄你的交易：</p>
+            <ul>
+                <li>日期</li>
+                <li>股票代碼</li>
+                <li>進場價格</li>
+                <li>出場價格</li>
+                <li>交易原因</li>
+                <li>情緒</li>
+                <li>結果</li>
+                <li>學到的教訓</li>
+            </ul>
+            <h3>反思的重要性</h3>
+            <p>定期反思你的交易，可以幫助你：</p>
+            <ul>
+                <li><span class="important">識別錯誤:</span>  找出導致虧損的原因。</li>
+                <li><span class="important">改進策略:</span>  優化你的交易策略。</li>
+                <li><span class="important">控制情緒:</span>  更好地管理你的交易情緒。</span></li>
+            </ul>
+        </div>
+    </section>
+
+    <script>
+    // Quiz Logic
+    const quizzes = document.querySelectorAll('.quiz');
+	const quizAnswers = ['b','b','b']; // add quiz answers here
+
+    quizzes.forEach((quiz, index) => {
+        const options = quiz.querySelectorAll('.quiz-options li');
+        const feedback = quiz.querySelector('.quiz-feedback');
+        const correctAnswer = quizAnswers[index]; // Correct answer for this specific question.
+
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                 // Remove previous classes
+                options.forEach(opt => opt.classList.remove('correct', 'incorrect'));
+
+
+                const selectedAnswer = option.dataset.answer;
+                if (selectedAnswer === correctAnswer) {
+                    option.classList.add('correct');
+                    feedback.textContent = "正確！";
+                } else {
+                    option.classList.add('incorrect');
+                    feedback.textContent = `錯誤。正確答案是 ${correctAnswer}`;
+                }
+                feedback.classList.remove('hidden'); // Show feedback
+            });
+        });
+    });
+
+    // Smooth Scrolling
+    document.querySelectorAll('nav a').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent default jump
+
+            const targetId = this.getAttribute('href'); // Get the target section's ID
+            const targetElement = document.querySelector(targetId);
+
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth' // Enable smooth scrolling
+                });
+            }
+        });
+    });
+
+     // Collapsible Sections
+    document.querySelectorAll('h2[data-section]').forEach(heading => {
+        heading.addEventListener('click', () => {
+            const sectionId = heading.dataset.section;
+            const sectionContent = document.getElementById(sectionId);
+
+            // Toggle visibility
+            sectionContent.classList.toggle('hidden');
+             heading.classList.toggle('active');
+        });
+    });
+
+    </script>
+</body>
+</html>
