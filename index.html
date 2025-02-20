@@ -2,11 +2,11 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>股票市場贏家：實現財務自由  (2022.05.30) </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">  <!-- Crucial for mobile -->
+    <title>股票市場贏家：實現財務自由 (2022.05.30)</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* (CSS styles from previous response - No changes needed here) */
         :root {
             --primary-color: #3b82f6;
             --secondary-color: #1e40af;
@@ -15,12 +15,17 @@
             --text-color: #1f2937;
             --card-bg: #ffffff;
             --hover-color: #2563eb;
+            --success-color: #28a745; /* Green for success/growth */
+            --warning-color: #ffc107; /* Yellow for warnings/cautions */
+            --danger-color: #dc3545;  /* Red for danger/loss */
+            --info-color:  #17a2b8;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
         }
 
         body {
@@ -28,111 +33,162 @@
             line-height: 1.7;
             color: var(--text-color);
             background-color: var(--bg-color);
+            overflow-x: hidden;
         }
 
         .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 20px;
+            /* No max-width on mobile, use padding for spacing */
+            padding: 15px;  /* Consistent padding */
         }
 
         header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
-            padding: 3rem 0;
+            padding: 2rem 0; /* Reduce padding slightly */
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem; /* Reduce bottom margin */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
         }
 
+
         header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+            font-size: 1.8rem;  /* Smaller font size for mobile */
+            margin-bottom: 0.8rem; /* Reduced margin */
+            position: relative;
+            z-index: 2;
         }
 
         header p {
-            font-size: 1.2rem;
+            font-size: 1rem; /* Smaller font size */
             opacity: 0.9;
+            position: relative;
+            z-index: 2;
         }
 
         .nav-tabs {
             display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 2rem 0;
-            padding: 0 1rem;
+            /* Use flex-wrap for mobile navigation */
             flex-wrap: wrap;
+            justify-content: space-around; /* Even spacing on mobile */
+            margin: 1rem 0; /* Reduced margin */
+            padding: 0; /* No padding */
         }
 
         .nav-tab {
-            padding: 1rem 2rem;
+            /* Use flex-basis for button width */
+            flex-basis: 48%;  /* Two columns on smaller screens, adjust as needed */
+            padding: 0.7rem 0.5rem; /* Reduced padding */
             background-color: var(--card-bg);
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1.1rem;
+            font-size: 0.9rem; /* Smaller font size */
             font-weight: bold;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 0.5rem; /* Add some spacing between wrapped buttons */
+            text-align: center; /* Ensure text is centered */
+            width: 100%; /* important, fill up 48% */
         }
+
 
         .nav-tab:hover {
             background-color: var(--hover-color);
             color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .nav-tab.active {
             background-color: var(--primary-color);
             color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
+
 
         .section {
             background-color: var(--card-bg);
             border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
+            padding: 1.5rem;  /* Reduced padding */
+            margin-bottom: 1.5rem; /* Reduced margin */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+            opacity: 1;
         }
 
         .section h2 {
             color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            font-size: 1.8rem;
+            margin-bottom: 1rem; /* Reduced margin */
+            font-size: 1.4rem; /* Smaller font size */
             border-bottom: 2px solid rgba(59, 130, 246, 0.2);
-            padding-bottom: 0.5rem;
+            padding-bottom: 0.4rem; /* Reduced padding */
+            position: relative;
         }
+        /* Icons - same as before, but sizes may need adjusting */
+        #core h2::before,
+        #technical h2::before,
+        #learning h2::before,
+        #other h2::before {
+          font-family: "Font Awesome 6 Free";
+          font-weight: 900;
+          margin-right: 0.5rem;
+          /* Adjust colors as needed */
+        }
+
+        #core h2::before { content: "\f004"; color: var(--danger-color); }
+        #technical h2::before { content: "\f201"; color: var(--success-color); }
+        #learning h2::before { content: "\f501"; color: var(--info-color); }
+        #other h2::before { content: "\f05a";  color: var(--warning-color); }
 
         .section h3 {
             color: var(--secondary-color);
-            margin: 1.5rem 0 1rem;
-            font-size: 1.3rem;
+            margin: 1rem 0 0.8rem; /* Reduced margins */
+            font-size: 1.1rem; /* Smaller font size */
         }
 
         .point-list {
             list-style: none;
-            margin-left: 1rem;
+            margin-left: 0.5rem; /* Reduced margin */
         }
 
         .point-list li {
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.6rem; /* Reduced margin */
             position: relative;
-            padding-left: 1.5rem;
+            padding-left: 1.3rem; /* Reduced padding */
+            transition: transform 0.2s ease;
         }
 
         .point-list li::before {
-            content: "•";
+            content: "\2022";
             color: var(--accent-color);
             position: absolute;
             left: 0;
+            font-size: 1rem; /* Smaller bullet */
+            line-height: 1.7;
         }
+
+        .point-list li:hover {
+            transform: translateX(5px);
+            color: var(--hover-color);
+        }
+
 
         .sub-point {
-            margin-left: 1.5rem;
-            margin-top: 0.3rem;
+            margin-left: 1.3rem; /* Match the li padding */
+            margin-top: 0.2rem; /* Reduced margin */
             color: #666;
-            font-size: 0.95rem;
+            font-size: 0.85rem; /* Smaller font size */
         }
 
-        .tip-box {
+        .tip-box {  /* No changes to this style specifically */
             background-color: rgba(59, 130, 246, 0.1);
             border-left: 4px solid var(--primary-color);
             padding: 1rem;
@@ -140,47 +196,58 @@
             border-radius: 0 8px 8px 0;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            
-            header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .nav-tab {
-                padding: 0.8rem 1.2rem;
-                font-size: 1rem;
-            }
-            
-            .section {
-                padding: 1.5rem;
-            }
+        .concept-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 1rem; /* Reduced padding */
+            margin-bottom: 1rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+        .concept-card:hover {
+             transform: translateY(-5px);
+             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .concept-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.6rem;  /* Reduced margin */
+            font-size: 1rem; /* Smaller font size */
+        }
+        .concept-card p {
+            color: var(--text-color);
+            font-size: 0.9rem; /* Smaller font size */
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            bottom: 10px; /* Reduce bottom spacing */
+            right: 10px; /* Reduce right spacing */
+            font-size: 1.5rem; /* Smaller icon */
+            color: var(--primary-color);
+            opacity: 0.5;
+            animation: bounce 2s infinite;
+            z-index: 100;
+            display: none;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        .show-scroll-indicator {
+            display: block;
+        }
+
+        /* No @media queries needed, as we've designed for mobile-first */
+
     </style>
-    <script>
-        function showSection(sectionId) {
-            // Hide all sections
-            document.querySelectorAll('.section').forEach(section => {
-                section.style.display = 'none';
-            });
-            
-            // Show selected section
-            document.getElementById(sectionId).style.display = 'block';
-            
-            // Update active tab
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelector(`[onclick="showSection('${sectionId}')"]`).classList.add('active');
-        }
-    </script>
 </head>
 <body>
     <header>
         <div class="container">
-            <h1 class="animate__animated animate__fadeIn">股票市場贏家：實現財務自由  </h1>
+            <h1 class="animate__animated animate__fadeIn">股票市場贏家：實現財務自由</h1>
             <p class="animate__animated animate__fadeIn animate__delay-1s">(2022.05.30)</p>
         </div>
     </header>
@@ -194,137 +261,157 @@
         </div>
 
        <!-- Core Concepts Section -->
-        <section id="core" class="section" role="tabpanel">
+        <section id="core" class="section active" role="tabpanel">  <!-- Initially active -->
             <h2>一、核心觀念與心態</h2>
 
-            <h3>1. 以市場為師</h3>
-            <ul class="point-list">
-                <li>股票市場是最好的老師，也是最嚴厲的老師。</li>
-                <li>交易是跟隨市場、順從市場，從市場中學習。</li>
-                <li>交易紀錄是重要的學習工具，要經常反省、審視。</li>
-                <li>市場不理會過去，只看現在。</li>
-            </ul>
+             <div class="concept-card">
+                <h4>1. 以市場為師</h4>
+                <ul class="point-list">
+                    <li>股票市場是最好的老師，也是最嚴厲的老師。</li>
+                    <li>交易是跟隨市場、順從市場，從市場中學習。</li>
+                    <li>交易紀錄是重要的學習工具，要經常反省、審視。</li>
+                    <li>市場不理會過去，只看現在。</li>
+                </ul>
+            </div>
 
-            <h3>2. 預測 vs. 修正</h3>
-            <ul class="point-list">
-                <li>股票交易是一連串的預測，但預測並非重點。</li>
-                <li>重點是建立交易系統，並在預測錯誤時及時修正。</li>
-                <li>修正就像防護網，保護交易者。</li>
-                <li>不追求完美預測，但追求及時修正。</li>
-            </ul>
+            <div class="concept-card">
+                <h4>2. 預測 vs. 修正</h4>
+                <ul class="point-list">
+                    <li>股票交易是一連串的預測，但預測並非重點。</li>
+                    <li>重點是建立交易系統，並在預測錯誤時及時修正。</li>
+                    <li>修正就像防護網，保護交易者。</li>
+                    <li>不追求完美預測，但追求及時修正。</li>
+                </ul>
+            </div>
 
-            <h3>3. 心理素質</h3>
-            <ul class="point-list">
-                <li>股票只是籌碼、工具，不要過度關注，也不要帶有情感。</li>
-                <li>了解自己，選擇並調整適合自己的交易方式。</li>
-                <li>克服恐懼與貪婪，避免情緒化交易。</li>
-                <li>用「機會成本」取代「絕對成本」的思維，學會汰弱留強。</li>
-                <li>接受不確定性，尋求簡單答案和保證是人的天性，但要避免盲從。</li>
-                <li>交易是一場心理遊戲，要有高度的自由度和自律性。</li>
-                <li>看淡輸贏，停損就像呼吸一樣自然。</li>
-                <li>不要害怕犯錯，但要從錯誤中學習。</li>
-                <li>要有耐心和毅力，持續學習和精進。</li>
-            </ul>
-
-            <h3>4. 人性與股市</h3>
-            <ul class="point-list">
-                <li>日常生活中的慣性（例如：低價買入）不一定適用於股市（可能需要追漲）。</li>
-                <li>股價上漲時，人容易產生「心理剛性」，相信會繼續上漲。</li>
-                <li>股價下跌時，樂觀情緒會壓制恐懼，導致錯失停損時機。</li>
-                <li>還在想上一個漏接的球, 很容易連續失誤</li>
-            </ul>
+             <div class="concept-card">
+                <h4>3. 心理素質</h4>
+                <ul class="point-list">
+                    <li>股票只是籌碼、工具，不要過度關注，也不要帶有情感。</li>
+                    <li>了解自己，選擇並調整適合自己的交易方式。</li>
+                    <li>克服恐懼與貪婪，避免情緒化交易。</li>
+                    <li>用「機會成本」取代「絕對成本」的思維，學會汰弱留強。</li>
+                    <li>接受不確定性，尋求簡單答案和保證是人的天性，但要避免盲從。</li>
+                    <li>交易是一場心理遊戲，要有高度的自由度和自律性。</li>
+                    <li>看淡輸贏，停損就像呼吸一樣自然。</li>
+                    <li>不要害怕犯錯，但要從錯誤中學習。</li>
+                    <li>要有耐心和毅力，持續學習和精進。</li>
+                </ul>
+            </div>
+            <div class="concept-card">
+                <h4>4. 人性與股市</h4>
+                <ul class="point-list">
+                    <li>日常生活中的慣性（例如：低價買入）不一定適用於股市（可能需要追漲）。</li>
+                    <li>股價上漲時，人容易產生「心理剛性」，相信會繼續上漲。</li>
+                    <li>股價下跌時，樂觀情緒會壓制恐懼，導致錯失停損時機。</li>
+                    <li>還在想上一個漏接的球, 很容易連續失誤</li>
+                </ul>
+            </div>
         </section>
 
         <!-- Technical Analysis Section -->
-        <section id="technical" class="section" style="display: none;" role="tabpanel">
+        <section id="technical" class="section" role="tabpanel">
             <h2>二、技術分析與操作</h2>
 
-            <h3>1. 技術分析基礎</h3>
-            <ul class="point-list">
-                <li>趨勢：
-                    <div class="sub-point">多頭：主力線向上，K線在主力線上方，一頭比一頭高（Higher Highs），紅K比黑K多；一底比一底高（Higher Lows）。</div>
-                    <div class="sub-point">空頭：主力線向下，K線在主力線下方，一頭比一頭低（Lower Lows），黑K比紅K多；一底比一底低（Lower Highs）。</div>
-                </li>
-                <li>乖離：
-                    <div class="sub-point">股價與均線的偏離程度。</div>
-                    <div class="sub-point">乖離率過大時，可能出現反轉（例如：長紅、跳空）。</div>
-                    <div class="sub-point">乖離率是短期的獲利率指標，20%~30%可能就有人獲利了結。</div>
-                </li>
-                <li>型態：</li>
-                <li>價.量:</li>
-                <li>角度:</li>
-                <li>MACD:</li>
-                <li>籌碼: 亂中有序 </li>
+            <div class="concept-card">
+              <h4>1. 技術分析基礎</h4>
+              <ul class="point-list">
+                  <li>趨勢：
+                      <div class="sub-point">多頭：主力線向上，K線在主力線上方，一頭比一頭高（Higher Highs），紅K比黑K多；一底比一底高（Higher Lows）。</div>
+                      <div class="sub-point">空頭：主力線向下，K線在主力線下方，一頭比一頭低（Lower Lows），黑K比紅K多；一底比一底低（Lower Highs）。</div>
+                  </li>
+                  <li>乖離：
+                      <div class="sub-point">股價與均線的偏離程度。</div>
+                      <div class="sub-point">乖離率過大時，可能出現反轉（例如：長紅、跳空）。</div>
+                      <div class="sub-point">乖離率是短期的獲利率指標，20%~30%可能就有人獲利了結。</div>
+                  </li>
+                  <li>型態：</li>
+                  <li>價.量:</li>
+                  <li>角度:</li>
+                  <li>MACD:</li>
+                  <li>籌碼: 亂中有序 </li>
+              </ul>
+            </div>
 
-            </ul>
 
-            <h3>2. 操作策略</h3>
-            <ul class="point-list">
-                <li>買入時機：
-                    <div class="sub-point">買在趨勢形成時（是買了，但買對了）。</div>
-                    <div class="sub-point">大盤深跌後的第一根長紅帶量，可能是追擊訊號。</div>
-                    <div class="sub-point">不追求最低點買入。</div>
-                </li>
-                <li>停損/停利：
-                    <div class="sub-point">主動停損/換股，汰弱留強。</div>
-                    <div class="sub-point">混亂的盤面，先減碼，看錯再買回。</div>
-                    <div class="sub-point">跌破主力線（例如：40-60天均線），先減碼。</div>
-                    <div class="sub-point">停損不停利（讓獲利奔跑）。</div>
-                    <div class="sub-point">用機會成本來衡量，不要死抱著虧損的股票。</div>
-                </li>
-                <li>資金管理：
-                    <div class="sub-point">分批買賣，控制風險。</div>
-                    <div class="sub-point">即使分批買賣，每次下注的勝算和金額都可能不同。</div>
-                    <div class="sub-point">用最小的金額練習，繳學費，並自由調配資金。</div>
-                </li>
-                <li>追蹤交易 >> 預測交易</li>
-                <li>選強/跌勢形成才動作</li>
-                <li>多頭可追漲, 空頭不追漲(勇氣)</li>
-            </ul>
-            <h3>3. 選股</h3>
+             <div class="concept-card">
+                <h4>2. 操作策略</h4>
                 <ul class="point-list">
-                    <li>選擇近期強勢股，特別是收盤前放大量的攻擊股。</li>
+                    <li>買入時機：
+                        <div class="sub-point">買在趨勢形成時（是買了，但買對了）。</div>
+                        <div class="sub-point">大盤深跌後的第一根長紅帶量，可能是追擊訊號。</div>
+                        <div class="sub-point">不追求最低點買入。</div>
+                    </li>
+                    <li>停損/停利：
+                        <div class="sub-point">主動停損/換股，汰弱留強。</div>
+                        <div class="sub-point">混亂的盤面，先減碼，看錯再買回。</div>
+                        <div class="sub-point">跌破主力線（例如：40-60天均線），先減碼。</div>
+                        <div class="sub-point">停損不停利（讓獲利奔跑）。</div>
+                        <div class="sub-point">用機會成本來衡量，不要死抱著虧損的股票。</div>
+                    </li>
+                    <li>資金管理：
+                        <div class="sub-point">分批買賣，控制風險。</div>
+                        <div class="sub-point">即使分批買賣，每次下注的勝算和金額都可能不同。</div>
+                        <div class="sub-point">用最小的金額練習，繳學費，並自由調配資金。</div>
+                    </li>
+                    <li>追蹤交易 >> 預測交易</li>
+                    <li>選強/跌勢形成才動作</li>
+                    <li>多頭可追漲, 空頭不追漲(勇氣)</li>
                 </ul>
+            </div>
 
-            <h3>4. 主力思維(進階)</h3>
-            <ul class="point-list">
-                <li>主力出貨思維：炒到高天價，然後一路壓低。</li>
-                <li>從大量出手的反覆檢討、揣摩，淬鍊簡化交易方法。</li>
-                <li>過去的修正並非臆測，而是汰弱留強。</li>
-                <li>人生就是. 買高價, 賣更高價. <買在安全而非最低>. 違人性 要低價, 在更低價回補</li>
-            </ul>
+            <div class="concept-card">
+              <h4>3. 選股</h4>
+              <ul class="point-list">
+                  <li>選擇近期強勢股，特別是收盤前放大量的攻擊股。</li>
+              </ul>
+            </div>
+
+            <div class="concept-card">
+                <h4>4. 主力思維(進階)</h4>
+                <ul class="point-list">
+                    <li>主力出貨思維：炒到高天價，然後一路壓低。</li>
+                    <li>從大量出手的反覆檢討、揣摩，淬鍊簡化交易方法。</li>
+                    <li>過去的修正並非臆測，而是汰弱留強。</li>
+                    <li>人生就是. 買高價, 賣更高價. <買在安全而非最低>. 違人性 要低價, 在更低價回補</li>
+                </ul>
+            </div>
         </section>
 
         <!-- Learning Section -->
-        <section id="learning" class="section" style="display: none;" role="tabpanel">
+        <section id="learning" class="section" role="tabpanel">
             <h2>三、學習與成長</h2>
 
-            <h3>1. 學習方法</h3>
-            <ul class="point-list">
-                <li>建立交易系統，並大量練習。</li>
-                <li>從實戰中找到適合自己的交易節奏和方法。</li>
-                <li>不要怕嘗試，但要分批試單。</li>
-                <li>多觀察、多思考、多做筆記，並反覆檢討。</li>
-                <li>用一輩子的時間去探索，拉大格局，不要急於一時的得失。</li>
-            </ul>
+             <div class="concept-card">
+                <h4>1. 學習方法</h4>
+                <ul class="point-list">
+                    <li>建立交易系統，並大量練習。</li>
+                    <li>從實戰中找到適合自己的交易節奏和方法。</li>
+                    <li>不要怕嘗試，但要分批試單。</li>
+                    <li>多觀察、多思考、多做筆記，並反覆檢討。</li>
+                    <li>用一輩子的時間去探索，拉大格局，不要急於一時的得失。</li>
+                </ul>
+            </div>
 
-            <h3>2. 避免的錯誤</h3>
-            <ul class="point-list">
-                <li>過度關注消息面，忽略技術面。</li>
-                <li>沒有自己的交易系統，盲目跟隨他人。</li>
-                <li>不設停損，死抱著虧損的股票。</li>
-                <li>頻繁交易，過度交易。</li>
-                <li>不學習、不反省、不進步。</li>
-                <li>常人不換股的盲區：交易成本和持股的"情緒成本"；"換股錯誤的後悔"大於"不作為的後悔"。</li>
-                <li>重複做同樣的事, 卻期待不一樣的結果, 是不理性的.</li>
-                <li>打破長期投資/短期投機的迷思 -> 只有交易訊號.</li>
-                <li>短線是初學的必要之惡，密集集訓。</li>
-                <li>交易的重點是後悔, 後悔不完, 會討苦吃. 復盤不等於後悔</li>
-            </ul>
+            <div class="concept-card">
+              <h4>2. 避免的錯誤</h4>
+              <ul class="point-list">
+                  <li>過度關注消息面，忽略技術面。</li>
+                  <li>沒有自己的交易系統，盲目跟隨他人。</li>
+                  <li>不設停損，死抱著虧損的股票。</li>
+                  <li>頻繁交易，過度交易。</li>
+                  <li>不學習、不反省、不進步。</li>
+                  <li>常人不換股的盲區：交易成本和持股的"情緒成本"；"換股錯誤的後悔"大於"不作為的後悔"。</li>
+                  <li>重複做同樣的事, 卻期待不一樣的結果, 是不理性的.</li>
+                  <li>打破長期投資/短期投機的迷思 -> 只有交易訊號.</li>
+                  <li>短線是初學的必要之惡，密集集訓。</li>
+                  <li>交易的重點是後悔, 後悔不完, 會討苦吃. 復盤不等於後悔</li>
+              </ul>
+            </div>
         </section>
 
         <!-- Other Concepts Section -->
-        <section id="other" class="section" style="display: none;" role="tabpanel">
+        <section id="other" class="section" role="tabpanel">
             <h2>四、其他</h2>
             <ul class="point-list">
                  <li>股票可以讓人透過努力，提高勝率。</li>
@@ -333,5 +420,48 @@
             </ul>
         </section>
     </div>
+    <div class="scroll-indicator" title="Scroll to see more">
+        <i class="fas fa-chevron-down"></i>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+           // Hide all sections and remove 'active' class
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active'); // Remove active for fade-out
+                section.style.display = 'none';     // Then hide
+            });
+
+            // Show selected section and add 'active' class
+            const selectedSection = document.getElementById(sectionId);
+            selectedSection.style.display = 'block'; // First, make it visible
+            setTimeout(() => {
+                selectedSection.classList.add('active'); // Then add active for fade-in
+            }, 10); // Small delay for the display:block to take effect
+
+
+            // Update active tab
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[onclick="showSection('${sectionId}')"]`).classList.add('active');
+        }
+      // Initially show the first section
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('core');
+
+
+            // Scroll event listener
+            window.addEventListener('scroll', () => {
+                const scrollIndicator = document.querySelector('.scroll-indicator');
+                // Show if scrolled past the first section
+                if (window.scrollY > window.innerHeight /2 ) {
+                    scrollIndicator.classList.add('show-scroll-indicator');
+                } else {
+                    scrollIndicator.classList.remove('show-scroll-indicator');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
